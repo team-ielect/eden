@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Viewport ensures proper scaling on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NOVA - Secure Login</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -41,6 +42,14 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+            /* Prevents elements from overflowing horizontal bounds */
+            max-width: 100%;
+        }
+
+        html {
+            width: 100%;
+            overflow-x: hidden;
+            /* Strictly禁止横向滚动 */
         }
 
         body {
@@ -54,8 +63,11 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
-            padding: 20px;
+            /* Fix horizontal scroll issue */
+            padding: 15px;
+            /* Reduced padding for mobile */
             position: relative;
+            width: 100%;
         }
 
         /* --- Animated Background Elements --- */
@@ -66,19 +78,24 @@
             z-index: 0;
             opacity: 0.25;
             animation: floatBlob 15s infinite alternate ease-in-out;
+            /* Ensure blobs don't cause scrollbars */
+            width: 100vw;
+            height: 100vh;
+            max-width: 500px;
+            max-height: 500px;
         }
 
         .blob-1 {
-            width: 500px;
-            height: 500px;
+            width: 300px;
+            height: 300px;
             background: var(--admin-color);
-            top: -100px;
-            left: -100px;
+            top: -50px;
+            left: -50px;
         }
 
         .blob-2 {
-            width: 400px;
-            height: 400px;
+            width: 250px;
+            height: 250px;
             background: var(--officer-color);
             bottom: -50px;
             right: -50px;
@@ -86,8 +103,8 @@
         }
 
         .blob-3 {
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
             background: var(--voter-color);
             top: 40%;
             left: 50%;
@@ -108,7 +125,6 @@
         .container {
             width: 100%;
             max-width: 1100px;
-            /* Increased max width */
             position: relative;
             z-index: 1;
         }
@@ -219,11 +235,10 @@
             border-color: var(--success-color) !important;
         }
 
-        /* --- Role Selection (Updated Design) --- */
+        /* --- Role Selection --- */
         #roleSelection {
             display: flex;
-            gap: 30px;
-            /* Increased gap */
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
             perspective: 1000px;
@@ -232,15 +247,12 @@
         .role-card {
             flex: 1;
             min-width: 260px;
-            /* Larger cards */
             max-width: 320px;
             background-color: rgba(28, 30, 38, 0.8);
-            /* Slight transparency */
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 50px 30px;
-            /* More padding */
             text-align: center;
             cursor: pointer;
             transition: all var(--transition-speed) cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -250,6 +262,8 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            width: 100%;
+            /* Ensure it doesn't overflow container */
         }
 
         .role-card:hover {
@@ -257,7 +271,6 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
         }
 
-        /* Top accent bar */
         .role-card::before {
             content: '';
             position: absolute;
@@ -266,7 +279,6 @@
             width: 100%;
             height: 5px;
             background: currentColor;
-            /* Uses the text color defined below */
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.4s ease;
@@ -278,11 +290,9 @@
 
         .role-icon {
             font-size: 3rem;
-            /* Larger icon */
             margin-bottom: 25px;
             background: rgba(255, 255, 255, 0.03);
             width: 100px;
-            /* Perfect square */
             height: 100px;
             display: flex;
             align-items: center;
@@ -297,6 +307,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            width: 100%;
         }
 
         .role-title {
@@ -312,8 +323,6 @@
         }
 
         /* --- Specific Card Styles --- */
-
-        /* ADMIN (Purple) */
         .admin-card {
             color: var(--admin-color);
             border-color: rgba(124, 77, 255, 0.3);
@@ -335,13 +344,11 @@
             color: white !important;
         }
 
-        /* Force white text on hover */
         .admin-card:hover .role-icon {
             background: rgba(255, 255, 255, 0.2);
             color: white;
         }
 
-        /* OFFICER (Red) */
         .officer-card {
             color: var(--officer-color);
             border-color: rgba(255, 59, 48, 0.3);
@@ -368,7 +375,6 @@
             color: white;
         }
 
-        /* VOTER (Gold) */
         .voter-card {
             color: var(--voter-color);
             border-color: rgba(255, 193, 7, 0.3);
@@ -382,7 +388,6 @@
 
         .voter-card:hover {
             background-color: var(--voter-dark);
-            /* Slightly darker gold for text readability on hover */
             border-color: var(--voter-dark);
             box-shadow: 0 20px 40px rgba(255, 193, 7, 0.3);
         }
@@ -400,19 +405,19 @@
         .form-wrapper {
             display: none;
             background-color: rgba(28, 30, 38, 0.95);
-            /* Slightly transparent */
             backdrop-filter: blur(20px);
             border-radius: 28px;
-            padding: 45px;
+            padding: 40px;
+            /* Reduced from 45px */
             border: 1px solid var(--border-color);
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             max-height: 90vh;
             overflow-y: auto;
+            width: 100%;
             max-width: 550px;
             margin: 0 auto;
             position: relative;
             scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) var(--input-bg);
         }
 
         .form-wrapper::-webkit-scrollbar {
@@ -433,7 +438,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             transition: 0.2s;
             padding: 8px 12px;
             border-radius: 8px;
@@ -447,7 +452,7 @@
 
         .form-title {
             font-size: 1.8rem;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             text-align: center;
             font-weight: 800;
             background: linear-gradient(45deg, #fff, #888);
@@ -456,13 +461,13 @@
         }
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             position: relative;
         }
 
         .form-row {
             display: flex;
-            gap: 20px;
+            gap: 15px;
         }
 
         .form-row .form-group {
@@ -473,7 +478,7 @@
             display: block;
             color: #ccc;
             font-size: 0.85rem;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
@@ -482,6 +487,7 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .form-control {
@@ -489,12 +495,16 @@
             background-color: var(--input-bg);
             border: 2px solid transparent;
             color: var(--text-main);
-            padding: 16px 50px 16px 18px;
-            border-radius: 14px;
+            padding: 14px 45px 14px 16px;
+            /* Adjusted padding */
+            border-radius: 12px;
             outline: none;
             font-size: 1rem;
+            /* Keeps font size 16px to prevent iOS zoom */
             transition: all 0.2s;
             background-clip: padding-box;
+            -webkit-appearance: none;
+            /* Remove iOS styling */
         }
 
         .form-control:focus {
@@ -512,7 +522,7 @@
 
         .input-icon {
             position: absolute;
-            right: 18px;
+            right: 16px;
             color: var(--text-muted);
             pointer-events: none;
             transition: 0.2s;
@@ -525,7 +535,7 @@
         /* Loading spinner inside input */
         .input-loader {
             position: absolute;
-            right: 18px;
+            right: 16px;
             width: 20px;
             height: 20px;
             border: 2px solid #555;
@@ -557,15 +567,14 @@
         .login-btn {
             width: 100%;
             background: linear-gradient(135deg, #555, #333);
-            /* Neutral dark for default */
             color: white;
             border: none;
-            padding: 18px;
+            padding: 16px;
             border-radius: 14px;
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 25px;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             position: relative;
@@ -591,15 +600,15 @@
 
         .paste-btn {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #ccc;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -632,11 +641,11 @@
         .modal-content {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 50px;
+            padding: 40px 30px;
             border-radius: 28px;
             text-align: center;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
         }
 
@@ -644,17 +653,18 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 35px;
+            margin-top: 30px;
         }
 
         .modal-btn {
-            padding: 16px;
+            padding: 14px;
             border-radius: 12px;
             border: none;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
             font-size: 1rem;
+            width: 100%;
         }
 
         .btn-primary {
@@ -702,7 +712,7 @@
         .radio-item label {
             display: block;
             text-align: center;
-            padding: 12px;
+            padding: 10px;
             cursor: pointer;
             border-radius: 10px;
             margin: 0;
@@ -720,23 +730,25 @@
         /* --- Toast --- */
         .toast {
             position: fixed;
-            bottom: 40px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background-color: #2a2d36;
             color: white;
-            padding: 16px 35px;
+            padding: 12px 25px;
             border-radius: 60px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 3000;
             border: 1px solid #444;
             white-space: nowrap;
             font-weight: 500;
+            width: max-content;
+            max-width: 90%;
         }
 
         .toast.show {
@@ -744,35 +756,67 @@
             opacity: 1;
         }
 
-        /* Mobile Responsive */
+        /* --- Mobile Responsive Tweaks --- */
         @media (max-width: 700px) {
-            .container {
+            body {
                 padding: 10px;
+                /* Fix background fixed positioning issue on iOS */
+                background-attachment: scroll;
             }
 
+            .container {
+                padding: 0;
+            }
+
+            /* Form Wrapper Mobile Fixes */
             .form-wrapper {
-                padding: 30px;
+                padding: 25px 20px;
+                /* Less padding to fit more content */
                 border-radius: 20px;
+                max-height: 88vh;
+                /* Leave room for bottom bar if any */
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+                margin-bottom: 25px;
             }
 
             .role-card {
                 min-width: 100%;
+                /* Full width */
                 max-width: 100%;
                 flex-direction: row;
+                /* Side by side layout */
                 text-align: left;
-                padding: 25px;
+                padding: 20px;
+                margin-bottom: 10px;
             }
 
             .role-icon {
                 margin-bottom: 0;
-                margin-right: 25px;
-                width: 70px;
-                height: 70px;
-                font-size: 2rem;
+                margin-right: 20px;
+                width: 60px;
+                /* Smaller icon */
+                height: 60px;
+                font-size: 1.5rem;
+                flex-shrink: 0;
             }
 
             .role-info {
                 flex: 1;
+                justify-content: center;
+                overflow: hidden;
+                /* Prevent text spill */
+            }
+
+            .role-title {
+                font-size: 1.2rem;
+                margin-bottom: 5px;
+            }
+
+            .role-desc {
+                font-size: 0.85rem;
             }
 
             .form-row {
@@ -781,14 +825,35 @@
             }
 
             .form-row .form-group {
-                margin-bottom: 22px;
+                margin-bottom: 20px;
+            }
+
+            /* Adjust Inputs for Touch */
+            .form-control {
+                padding: 14px 45px 14px 16px;
+                font-size: 16px;
+                /* Prevents zoom */
+            }
+
+            .login-btn {
+                padding: 14px;
+                font-size: 1rem;
+            }
+
+            .paste-btn {
+                width: 34px;
+                height: 34px;
+                right: 6px;
+            }
+
+            /* Adjust input right padding to accommodate paste button */
+            .input-group:has(.paste-btn) .form-control {
+                padding-right: 50px;
             }
 
             .bg-blob {
                 opacity: 0.15;
             }
-
-            /* Dim background on mobile for readability */
         }
     </style>
 </head>
@@ -813,7 +878,7 @@
                 </div>
             </div>
 
-            <!-- Officer Card (Updated: Red & User Tie) -->
+            <!-- Officer Card -->
             <div class="role-card officer-card" onclick="openOfficerLogin()">
                 <div class="role-icon"><i class="fa-solid fa-user-tie"></i></div>
                 <div class="role-info">
@@ -822,7 +887,7 @@
                 </div>
             </div>
 
-            <!-- Voter Card (Updated: Gold & Check to Slot) -->
+            <!-- Voter Card -->
             <div class="role-card voter-card" onclick="openVoterChoice()">
                 <div class="role-icon"><i class="fa-solid fa-check-to-slot"></i></div>
                 <div class="role-info">
