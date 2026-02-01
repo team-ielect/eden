@@ -687,7 +687,8 @@
             border-color: #555;
         }
 
-        /* --- Radio --- */
+        /* --- Updated Radio Button CSS --- */
+
         .radio-group {
             display: flex;
             gap: 12px;
@@ -701,30 +702,42 @@
             position: relative;
         }
 
+        /* The actual radio input - invisible but clickable */
         .radio-item input {
             opacity: 0;
             position: absolute;
             width: 100%;
             height: 100%;
             cursor: pointer;
+            z-index: 10;
+            /* Ensures it sits on top to capture clicks */
         }
 
+        /* The label (what you visually see) */
         .radio-item label {
-            display: block;
-            text-align: center;
-            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
             cursor: pointer;
             border-radius: 10px;
             margin: 0;
             color: var(--text-muted);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 1;
         }
 
+        /* The Highlighted/Checked State */
         .radio-item input:checked+label {
-            background-color: var(--primary-color);
+            background-color: var(--admin-color);
+            /* Fixed: Uses defined purple color */
             color: white;
-            box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 77, 255, 0.5);
+            /* Stronger glow */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Subtle border for clarity */
         }
 
         /* --- Toast --- */
