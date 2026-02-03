@@ -10,7 +10,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- ADDED: html2canvas Library for Downloading the Card as Image -->
+    <!-- ADDED: html2canvas Library for Downloading of Card as Image -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- ADDED: QRCode.js Library for Perfect Client-Side Generation -->
@@ -23,7 +23,7 @@
             --sidebar-bg: #16181e;
             --card-bg: #1c1e26;
             --input-bg: #272932;
-            /* PRIMARY RED COLOR */
+            /* PRIMARY GOLD COLOR */
             --primary-color: #FFC107;
             --primary-hover: #FFB300;
             --primary-text: #ffffff;
@@ -97,6 +97,8 @@
             padding: 20px;
             transition: transform 0.3s ease;
             flex-shrink: 0;
+            z-index: 1001;
+            /* Above Bottom Nav when open */
         }
 
         .brand {
@@ -633,7 +635,8 @@
         /* --- Toast --- */
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 90px;
+            /* Adjusted for mobile bottom nav */
             right: 30px;
             background-color: var(--card-bg);
             color: white;
@@ -648,6 +651,20 @@
             transition: all 0.3s;
             z-index: 4000;
             border-left: 4px solid var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .toast {
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                width: 90%;
+                right: auto;
+            }
+
+            .toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         .toast.show {
@@ -684,7 +701,7 @@
             overflow: hidden;
         }
 
-        /* Decorative Red Background Elements */
+        /* Decorative Gold Background Elements */
         .qr-card::before {
             content: '';
             position: absolute;
@@ -732,13 +749,10 @@
         }
 
         /* UPDATED QR BODY STYLES */
-        /* We need a white container for the QR to ensure maximum contrast */
         .qr-body {
             z-index: 1;
             background-color: #ffffff;
-            /* PURE WHITE BACKGROUND */
             padding: 15px;
-            /* White padding around the code (Quiet Zone) */
             width: 200px;
             height: 200px;
             display: flex;
@@ -747,12 +761,8 @@
             border-radius: 8px;
         }
 
-        /* The div where the JS Library injects the QR image */
-        #qrcode {
-            /* Library will inject an image/canvas here */
-        }
+        #qrcode {}
 
-        /* Force the QR code image to fit perfectly */
         #qrcode img {
             display: block;
             width: 100%;
@@ -821,48 +831,7 @@
             margin-top: 20px;
         }
 
-        /* --- Mobile Responsive --- */
-        .mobile-toggle {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            z-index: 1100;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            border: none;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                height: 100vh;
-                z-index: 1000;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                padding: 20px;
-            }
-
-            .mobile-toggle {
-                display: flex;
-            }
-        }
-
-        /* --- ADDED: Candidate Grid Styles (Copied from Officer) --- */
+        /* --- ADDED: Candidate Grid Styles --- */
         .candidate-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -880,10 +849,8 @@
             text-align: center;
             position: relative;
             cursor: default;
-            /* No click action needed for just listing */
         }
 
-        /* Updated CSS for Text Symbol */
         .c-symbol {
             font-size: 0.9rem;
             font-weight: bold;
@@ -910,6 +877,98 @@
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
+
+        /* --- MOBILE BOTTOM NAVIGATION (NEW) --- */
+        .bottom-nav {
+            display: none;
+            /* Hidden on desktop */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background-color: var(--sidebar-bg);
+            border-top: 1px solid var(--border-color);
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-icon {
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-icon i {
+            margin-bottom: 4px;
+            transition: transform 0.2s;
+        }
+
+        .nav-icon.active {
+            color: var(--primary-color);
+        }
+
+        .nav-icon.active i {
+            transform: translateY(-2px);
+            text-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+        }
+
+        /* Active Indicator Line */
+        .nav-icon.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 40%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* --- Mobile Responsive --- */
+        .mobile-toggle {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                height: 100vh;
+                z-index: 1001;
+                /* Above Bottom Nav */
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                padding: 20px;
+                padding-bottom: 85px;
+                /* Prevent content from being hidden behind bottom nav */
+            }
+
+            .bottom-nav {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: none;
+            }
+
+            /* Removed old floating button */
+        }
     </style>
 </head>
 
@@ -920,11 +979,6 @@
         <div class="spinner"></div>
         <p style="color: var(--text-muted); font-size: 1.1rem;">Authenticating Voter...</p>
     </div>
-
-    <!-- Mobile Sidebar Toggle -->
-    <button class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')">
-        <i class="fa-solid fa-bars"></i>
-    </button>
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
@@ -997,7 +1051,7 @@
                         placeholder="Enter Election ID (e.g. EL2024)" style="text-transform: uppercase;"
                         onkeypress="handleEnter(event)">
 
-                    <!-- UPDATED: Button structure now supports loading animation -->
+                    <!-- Button structure supports loading animation -->
                     <button id="searchElecBtn" class="btn btn-primary" onclick="window.searchElection()">
                         <span class="btn-text-content"><i class="fa-solid fa-magnifying-glass"></i> Search</span>
                         <div class="btn-loading-spinner"></div>
@@ -1040,7 +1094,7 @@
                     </div>
 
                     <div class="qr-body">
-                        <!-- The QRCode.js library will inject the QR code here -->
+                        <!-- The QRCode.js library will injects QR code here -->
                         <div id="qrcode"></div>
                     </div>
 
@@ -1060,6 +1114,26 @@
         </div>
 
     </main>
+
+    <!-- NEW: Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <!-- Dashboard -->
+        <div class="nav-icon active" data-target="dashboard" onclick="handleMobileNavClick('dashboard', this)">
+            <i class="fa-solid fa-gauge-high"></i>
+        </div>
+        <!-- Elections -->
+        <div class="nav-icon" data-target="elections" onclick="handleMobileNavClick('elections', this)">
+            <i class="fa-solid fa-vote-yea"></i>
+        </div>
+        <!-- Candidates -->
+        <div class="nav-icon" data-target="candidates" onclick="handleMobileNavClick('candidates', this)">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <!-- Others (Details, QR, Logout) -->
+        <div class="nav-icon" data-target="others" onclick="toggleMobileSidebar(this)">
+            <i class="fa-solid fa-grip"></i>
+        </div>
+    </div>
 
     <!-- Search Election Modal -->
     <div id="electionModal" class="modal">
@@ -1200,7 +1274,7 @@
         function populateDashboard(data) {
             document.getElementById('dashFullname').textContent = data.name;
 
-            // IMPORTANT: Ensure we use the session ID for display if DB ID is missing
+            // IMPORTANT: Ensure we use session ID for display if DB ID is missing
             const displayId = data.voterId || currentVoterId;
             document.getElementById('dashId').textContent = displayId;
 
@@ -1433,10 +1507,9 @@
                         ${buttonsHtml}
                     `;
 
-                    // Only allow clicking card body for details if buttons aren't the main focus, 
+                    // Only allow clicking card body for details if buttons aren't main focus, 
                     // but here we removed pointer-events: none from buttons, so clicking button works.
-                    // Keeping the onclick on the card for details if needed, but buttons handle their own clicks.
-                    // We remove the card.onclick to prevent conflict with button clicks if user clicks slightly off.
+                    // We remove card.onclick to prevent conflict with button clicks if user clicks slightly off.
 
                     container.appendChild(card);
                 });
@@ -1544,7 +1617,7 @@
             grid.innerHTML = '';
             msg.style.display = 'none';
 
-            // 1. Check which elections the voter is part of ('appear' node)
+            // 1. Check which elections voter is part of ('appear' node)
             const appearSnap = await get(ref(db, `voters/${currentVoterId}/appear`));
 
             if (!appearSnap.exists()) {
@@ -1566,7 +1639,6 @@
                         candidates.forEach(([key, data]) => {
                             const card = document.createElement('div');
                             card.className = 'candidate-card';
-                            // Use the same HTML structure as the Officer tab, minus edit/delete buttons
                             card.innerHTML = `
                                 <div class="c-symbol">${data.symbol}</div>
                                 <div class="c-party">${data.party}</div>
@@ -1590,8 +1662,18 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
 
+            // Update Sidebar
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if (el) el.classList.add('active');
+
+            // UPDATE BOTTOM NAV SYNC (Mobile)
+            document.querySelectorAll('.bottom-nav .nav-icon').forEach(icon => {
+                icon.classList.remove('active');
+                // Check if that tab has a direct bottom nav target (Dashboard, Elections, Candidates)
+                if (icon.dataset.target === tabId) {
+                    icon.classList.add('active');
+                }
+            });
 
             if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
 
@@ -1635,12 +1717,30 @@
             if (e.target.classList.contains('modal')) e.target.style.display = 'none';
         };
 
+        // --- 8. Mobile Navigation Handlers (NEW) ---
+        window.handleMobileNavClick = (tid, el) => {
+            // Find the sidebar nav item that matches this tid to pass to switchTab
+            const sidebarItem = document.querySelector(`.nav-item[onclick*="'${tid}'"]`);
+            switchTab(tid, sidebarItem);
+        };
+
+        window.toggleMobileSidebar = (btn) => {
+            const sidebar = document.getElementById('sidebar');
+
+            // Toggle Active State of the "Others" button
+            document.querySelectorAll('.bottom-nav .nav-icon').forEach(icon => icon.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Show Sidebar
+            sidebar.classList.toggle('active');
+        };
+
         /**
          * Generates the QR Code using qrcode.js library.
          * This ensures high contrast (Black on White) and high reliability on digital screens.
          */
         function generateVoterQrCard(voterId) {
-            // 1. Update the text on the card explicitly
+            // 1. Update text on card explicitly
             const qrIdDisplay = document.getElementById('qrVoterIdDisplay');
             if (qrIdDisplay) {
                 qrIdDisplay.textContent = voterId;
