@@ -112,6 +112,8 @@
             padding: 20px;
             transition: transform 0.3s ease;
             flex-shrink: 0;
+            z-index: 1001;
+            /* Above Bottom Nav when open */
         }
 
         .brand {
@@ -636,7 +638,8 @@
         /* --- Toast --- */
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 90px;
+            /* Adjusted for mobile */
             right: 30px;
             background-color: var(--card-bg);
             color: white;
@@ -653,34 +656,84 @@
             border-left: 4px solid var(--primary-color);
         }
 
+        @media (max-width: 768px) {
+            .toast {
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                width: 90%;
+                right: auto;
+            }
+
+            .toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
 
-        /* --- Mobile Responsive --- */
-        .mobile-toggle {
+        /* --- MOBILE BOTTOM NAVIGATION (NEW) --- */
+        .bottom-nav {
             display: none;
+            /* Hidden on desktop */
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: black;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background-color: var(--sidebar-bg);
+            border-top: 1px solid var(--border-color);
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-icon {
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            z-index: 1100;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            height: 100%;
             cursor: pointer;
-            border: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-icon i {
+            margin-bottom: 4px;
             transition: transform 0.2s;
         }
 
-        .mobile-toggle:active {
-            transform: scale(0.95);
+        .nav-icon.active {
+            color: var(--primary-color);
+        }
+
+        .nav-icon.active i {
+            transform: translateY(-2px);
+            text-shadow: 0 0 8px rgba(255, 59, 48, 0.6);
+        }
+
+        /* Active Indicator Line */
+        .nav-icon.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 40%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* --- Mobile Responsive --- */
+        .mobile-toggle {
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -688,7 +741,8 @@
                 transform: translateX(-100%);
                 position: fixed;
                 height: 100vh;
-                z-index: 1000;
+                z-index: 1001;
+                /* Above Bottom Nav */
                 box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
             }
 
@@ -698,12 +752,19 @@
 
             .main-content {
                 padding: 20px;
-                padding-bottom: 80px;
+                padding-bottom: 85px;
+                /* Prevent content from being hidden behind bottom nav */
+            }
+
+            .bottom-nav {
+                display: flex;
             }
 
             .mobile-toggle {
-                display: flex;
+                display: none;
             }
+
+            /* Removed old floating button */
 
             .header {
                 flex-direction: column;
@@ -728,10 +789,7 @@
         <p style="color: var(--text-muted); font-size: 1.1rem;">Authenticating Officer...</p>
     </div>
 
-    <button class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-
+    <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="brand"><i class="fa-solid fa-user-tie"></i> <span>Officer</span></div>
         <ul class="nav-links">
@@ -750,6 +808,7 @@
         <button class="sidebar-logout" onclick="openLogoutModal()"><i class="fa-solid fa-power-off"></i> Logout</button>
     </nav>
 
+    <!-- Main Content -->
     <main class="main-content" id="mainContent">
         <div class="header">
             <h2 id="pageTitle">Dashboard</h2>
@@ -878,7 +937,7 @@
                 </div>
 
                 <div style="margin-top: 30px; color: var(--text-muted);">
-                    <p id="boothMessage">Click below to launch the voting interface.</p>
+                    <p id="boothMessage">Click below to launch to voting interface.</p>
                 </div>
 
                 <button id="launchBtn" class="btn btn-primary" onclick="launchBooth()"
@@ -892,7 +951,7 @@
                 <h3 style="margin-bottom: 15px; color: var(--primary-color);"><i class="fa-solid fa-user-lock"></i>
                     Booth Entry Control</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Manually authorize a voter
-                    to enter the booth.</p>
+                    to enter booth.</p>
 
                 <div class="search-box" style="margin-bottom: 10px;">
                     <input type="text" id="boothManualId" class="form-control"
@@ -1092,6 +1151,26 @@
         </div>
     </main>
 
+    <!-- NEW: Mobile Bottom Navigation -->
+    <div class="bottom-nav">
+        <!-- Dashboard -->
+        <div class="nav-icon active" data-target="dashboard" onclick="handleMobileNavClick('dashboard', this)">
+            <i class="fa-solid fa-gauge-high"></i>
+        </div>
+        <!-- Verify -->
+        <div class="nav-icon" data-target="verify" onclick="handleMobileNavClick('verify', this)">
+            <i class="fa-solid fa-id-card"></i>
+        </div>
+        <!-- Candidates -->
+        <div class="nav-icon" data-target="candidates" onclick="handleMobileNavClick('candidates', this)">
+            <i class="fa-solid fa-user-group"></i>
+        </div>
+        <!-- Others (Booths, Polling, Result) -->
+        <div class="nav-icon" data-target="others" onclick="toggleMobileSidebar(this)">
+            <i class="fa-solid fa-grip"></i>
+        </div>
+    </div>
+
     <!-- Add/Edit Candidate Modal -->
     <div id="candidateModal" class="modal">
         <div class="modal-content">
@@ -1150,7 +1229,7 @@
             <div id="reader"
                 style="width: 100%; min-height: 300px; background: #000; border-radius: 8px; overflow: hidden;"></div>
             <p style="margin-top: 15px; color: var(--text-muted); font-size: 0.9rem;">
-                Point camera at the Voter's QR Code to auto-fill ID.
+                Point camera at Voter's QR Code to auto-fill ID.
             </p>
         </div>
     </div>
@@ -1184,7 +1263,7 @@
 
             // Initialize Scanner if not already running
             if (!html5QrcodeScanner) {
-                // Note: "reader" is the ID of the div where camera renders
+                // Note: "reader" is ID of div where camera renders
                 html5QrcodeScanner = new Html5Qrcode("reader");
 
                 const config = { fps: 10, qrbox: { width: 250, height: 250 } };
@@ -1217,7 +1296,7 @@
             // Stop scanning immediately
             stopScan();
 
-            // Fill the input
+            // Fill input
             if (targetInputId) {
                 const input = document.getElementById(targetInputId);
                 if (input) {
@@ -1225,7 +1304,7 @@
                 }
             }
 
-            // Trigger the associated action automatically for smooth workflow
+            // Trigger associated action automatically for smooth workflow
             if (targetActionBtnId) {
                 const btn = document.getElementById(targetActionBtnId);
                 if (btn && !btn.disabled) {
@@ -1288,12 +1367,25 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if (el) el.classList.add('active');
 
+            // UPDATE BOTTOM NAV SYNC (Mobile)
+            document.querySelectorAll('.bottom-nav .nav-icon').forEach(icon => {
+                icon.classList.remove('active');
+                // Check if that tab has a direct bottom nav target
+                if (icon.dataset.target === tabId) {
+                    icon.classList.add('active');
+                }
+            });
+
             const titleMap = {
                 'dashboard': 'Dashboard', 'verify': 'Verification', 'candidates': 'Candidate Management',
                 'demo1': 'Booth Management', 'demo2': 'Live Polling', 'demo3': 'Result'
             };
             document.getElementById('pageTitle').innerText = titleMap[tabId];
-            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
+
+            // Standard mobile sidebar close behavior for main tabs
+            if (window.innerWidth <= 768 && tabId !== 'demo1' && tabId !== 'demo2' && tabId !== 'demo3') {
+                document.getElementById('sidebar').classList.remove('active');
+            }
         };
 
         // --- Booth Monitoring Logic ---
@@ -1312,9 +1404,8 @@
                 if (!data) {
                     badge.className = 'booth-status-indicator status-offline';
                     badge.innerHTML = '<i class="fa-solid fa-power-off"></i> Offline';
-                    launchBtn.disabled = false;
-                    launchBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Launch Booth';
-                    msg.innerText = "Click below to launch the voting interface.";
+                    launchBtn.disabled = false; launchBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Launch Booth';
+                    msg.innerText = "Click below to launch to voting interface.";
                     updateLedgerStatus(false);
                     return;
                 }
@@ -1679,6 +1770,24 @@
             i.className = type === 'error' ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check';
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
+        };
+
+        // --- 8. Mobile Navigation Handlers (NEW) ---
+        window.handleMobileNavClick = (tid, el) => {
+            // Find sidebar nav item that matches this tid to pass to switchTab
+            const sidebarItem = document.querySelector(`.nav-item[onclick*="'${tid}'"]`);
+            switchTab(tid, sidebarItem);
+        };
+
+        window.toggleMobileSidebar = (btn) => {
+            const sidebar = document.getElementById('sidebar');
+
+            // Toggle Active State of the "Others" button
+            document.querySelectorAll('.bottom-nav .nav-icon').forEach(icon => icon.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Show Sidebar
+            sidebar.classList.toggle('active');
         };
 
         init();
